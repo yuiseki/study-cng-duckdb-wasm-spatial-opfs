@@ -120,11 +120,15 @@ export async function buildStacIndex(
       return out;
     },
     stats() {
+      // Closure-captured variables, not `this.x`. Inferring `this` here
+      // makes TypeScript widen the return type to `STACSpatialIndex |
+      // PromiseLike<STACSpatialIndex>` because of how the async builder is
+      // typed; sticking to closure values keeps the inference simple.
       return {
-        release: this.release,
-        theme: this.theme,
-        type: this.type,
-        indexed: this.items.length,
+        release,
+        theme,
+        type,
+        indexed: items.length,
       };
     },
   };

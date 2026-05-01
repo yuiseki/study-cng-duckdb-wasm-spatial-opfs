@@ -70,18 +70,17 @@ function App() {
       ): Promise<GateProbe> => {
         const t0 = performance.now();
         try {
-          const queryPromise = conn.query(sql).then((arrow) =>
-            arrow.toArray().map((r) => r.toJSON()),
-          );
-          const rows = await Promise.race<Record<string, unknown>[]>([
-            queryPromise,
-            new Promise((_, reject) =>
-              setTimeout(
-                () => reject(new Error(`timeout after ${timeoutMs} ms`)),
-                timeoutMs,
-              ),
+          type Rows = Record<string, unknown>[];
+          const queryPromise: Promise<Rows> = conn
+            .query(sql)
+            .then((arrow) => arrow.toArray().map((r) => r.toJSON() as Record<string, unknown>));
+          const timeoutPromise = new Promise<Rows>((_, reject) =>
+            setTimeout(
+              () => reject(new Error(`timeout after ${timeoutMs} ms`)),
+              timeoutMs,
             ),
-          ]);
+          );
+          const rows = await Promise.race([queryPromise, timeoutPromise]);
           const fail = validate(rows);
           const durationMs = Math.round(performance.now() - t0);
           if (fail) {
