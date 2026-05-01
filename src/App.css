@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  background: #fff;
+  color: #222;
+}
+
+h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+}
+
+h2 {
+  margin: 1.25rem 0 0.5rem 0;
+  font-size: 1rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.25rem;
+}
+
+ol {
+  padding-left: 1.25rem;
+}
